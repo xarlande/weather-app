@@ -10,7 +10,9 @@
     {{ item.lon }}
   </div>
   <div class="border">
-    {{ weatherList }}
+    <div class="my-1 mx-1 border" v-for="(item, idx) in weatherList" :key="idx">
+      {{ item }}
+    </div>
   </div>
 </template>
 
@@ -33,12 +35,7 @@ export default {
     };
   },
   mounted() {
-    this.getGeolocation("London");
-  },
-  watch: {
-    geolocationList() {
-      console.log(this.geolocationList);
-    },
+    this.getGeolocation("Ясенівці");
   },
 };
 </script>
