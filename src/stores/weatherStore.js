@@ -10,10 +10,13 @@ export const useWeatherStore = defineStore("weather", {
     getGeolocation(query) {
       if (query) {
         fetch(
-          `https://api.openweathermap.org/geo/1.0/direct?q=${query}&appid=${APIkey}`
+          `https://api.openweathermap.org/geo/1.0/direct?q=${query}&limit=5&appid=${APIkey}`
         )
           .then((item) => item.json())
-          .then((i) => (this.geolocationList = i));
+          .then((i) => {
+            this.geolocationList = i;
+            console.log(i);
+          });
       }
     },
     getWeather([lat, lon]) {
