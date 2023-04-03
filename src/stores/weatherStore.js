@@ -15,7 +15,6 @@ export const useWeatherStore = defineStore("weather", {
           .then((item) => item.json())
           .then((i) => {
             this.geolocationList = i;
-            console.log(i);
           });
       }
     },
