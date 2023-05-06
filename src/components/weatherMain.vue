@@ -23,36 +23,23 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import { useWeatherStore } from "@/stores/weatherStore";
-import { toRefs } from "vue";
+import { ref, toRefs } from "vue";
 
-export default {
-  name: "weatherMain",
-  setup() {
-    const store = useWeatherStore();
-    const { getGeolocation, geolocationList, getWeather, weatherList } =
-      toRefs(store);
+const store = useWeatherStore();
+const { getGeolocation, geolocationList, getWeather, weatherList } =
+  toRefs(store);
 
-    return {
-      getGeolocation,
-      geolocationList,
-      getWeather,
-      weatherList,
-    };
-  },
-  data: () => ({
-    searchGeolocation: "",
-  }),
-  watch: {
-    geolocationList() {
-      this.searchGeolocation = "";
-    },
-    weatherList() {
-      this.geolocationList = {};
-    },
-  },
-};
+const searchGeolocation = ref("");
+
+//   geolocationList() {
+//     this.searchGeolocation = "";
+//   },
+//   weatherList() {
+//     this.geolocationList = {};
+//   },
+// },
 </script>
 
 <style scoped></style>
