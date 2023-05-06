@@ -4,7 +4,8 @@
     class="border"
     type="text"
     v-model.trim="searchGeolocation"
-    @keyup.enter="this.getGeolocation(searchGeolocation)"
+    @keyup.enter="getGeolocation(searchGeolocation)"
+    maxlength="20"
   />
   <div
     v-for="(item, idx) in geolocationList"
@@ -16,30 +17,24 @@
     {{ item.country }}
     {{ item.state }}
   </div>
-  <div class="border">
-    <div class="my-1 mx-1 border" v-for="(item, idx) in weatherList" :key="idx">
-      {{ item }}
-    </div>
-  </div>
 </template>
 
 <script setup>
 import { useWeatherStore } from "@/stores/weatherStore";
-import { ref, toRefs } from "vue";
+import { ref, toRefs, watch } from "vue";
 
 const store = useWeatherStore();
-const { getGeolocation, geolocationList, getWeather, weatherList } =
-  toRefs(store);
+const { getGeolocation, getWeather } = store;
+const { geolocationList, weatherList } = toRefs(store);
 
 const searchGeolocation = ref("");
 
-//   geolocationList() {
-//     this.searchGeolocation = "";
-//   },
-//   weatherList() {
-//     this.geolocationList = {};
-//   },
-// },
+watch(geolocationList, () => {
+  searchGeolocation.value = "";
+});
+watch(weatherList, () => {
+  geolocationList.value = "";
+});
 </script>
 
 <style scoped></style>
