@@ -7,7 +7,7 @@
   </div>
 </template>
 <script setup>
-const props = defineProps({
+defineProps({
   weather: {
     type: Object,
     default: () => ({}),
