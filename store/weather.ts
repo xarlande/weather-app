@@ -15,7 +15,7 @@ export const useWeatherStore = defineStore('weatherStore', {
     },
     actions: {
         initStore(): void {
-
+            
         },
         setId(value: State['id']): void {
             this.id = value
