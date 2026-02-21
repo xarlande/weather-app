@@ -1,0 +1,98 @@
+import { defineStore } from "pinia";
+import { ref } from "vue";
+
+const APIkey = "83066a7babc02d04e934fe54a19e1ab9";
+
+export interface GeolocationItem {
+  name: string;
+  local_names?: Record<string, string>;
+  lat: number;
+  lon: number;
+  country: string;
+  state?: string;
+}
+
+export interface WeatherForecastItem {
+  dt: number;
+  main: {
+    temp: number;
+    feels_like: number;
+    temp_min: number;
+    temp_max: number;
+    pressure: number;
+    sea_level: number;
+    grnd_level: number;
+    humidity: number;
+    temp_kf: number;
+  };
+  weather: {
+    id: number;
+    main: string;
+    description: string;
+    icon: string;
+  }[];
+  clouds: {
+    all: number;
+  };
+  wind: {
+    speed: number;
+    deg: number;
+    gust: number;
+  };
+  visibility: number;
+  pop: number;
+  sys: {
+    pod: string;
+  };
+  dt_txt: string;
+}
+
+interface WeatherResponse {
+  cod: string;
+  message: number;
+  cnt: number;
+  list: WeatherForecastItem[];
+  city: {
+    id: number;
+    name: string;
+    coord: {
+      lat: number;
+      lon: number;
+    };
+    country: string;
+    population: number;
+    timezone: number;
+    sunrise: number;
+    sunset: number;
+  };
+}
+
+export const useWeatherStore = defineStore("weather", () => {
+  const geolocationList = ref<GeolocationItem[]>([]);
+  const weatherList = ref<WeatherForecastItem[]>([]);
+
+  const getGeolocation = (query: string) => {
+    if (query) {
+      fetch(
+        `https://api.openweathermap.org/geo/1.0/direct?q=${query}&limit=5&appid=${APIkey}`
+      )
+        .then((resp) => resp.json())
+        .then((data: GeolocationItem[]) => {
+          geolocationList.value = data;
+        });
+    }
+  };
+
+  const getWeather = ([lat, lon]: [number, number]) => {
+    fetch(
+      `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${APIkey}&units=metric`
+    )
+      .then((resp) => resp.json())
+      .then((data: WeatherResponse) => {
+        weatherList.value = data.list;
+        console.log(data);
+      });
+  };
+
+  return { weatherList, geolocationList, getWeather, getGeolocation };
+});
