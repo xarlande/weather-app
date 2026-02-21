@@ -8,7 +8,8 @@
     </div>
   </div>
 </template>
-<script setup>
-import WeatherSearch from "@/components/weatherSearch.vue";
+
+<script setup lang="ts">
 import WeatherBody from "@/components/weatherBody.vue";
+import WeatherSearch from "@/components/weatherSearch.vue";
 </script>

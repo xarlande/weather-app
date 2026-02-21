@@ -6,11 +6,11 @@
     <p>Максимальна температура: {{ weather.main.temp_max }} °C</p>
   </div>
 </template>
-<script setup>
-defineProps({
-  weather: {
-    type: Object,
-    default: () => ({}),
-  },
-});
+
+<script setup lang="ts">
+import type { WeatherForecastItem } from "@/stores/weatherStore";
+
+defineProps<{
+  weather: WeatherForecastItem;
+}>();
 </script>
