@@ -70,29 +70,55 @@ interface WeatherResponse {
 export const useWeatherStore = defineStore("weather", () => {
   const geolocationList = ref<GeolocationItem[]>([]);
   const weatherList = ref<WeatherForecastItem[]>([]);
+  const currentCity = ref<string>("");
+  const isLoading = ref<boolean>(false);
+  const error = ref<string | null>(null);
 
-  const getGeolocation = (query: string) => {
-    if (query) {
-      fetch(
+  const getGeolocation = async (query: string) => {
+    if (!query) return;
+    isLoading.value = true;
+    error.value = null;
+    try {
+      const resp = await fetch(
         `https://api.openweathermap.org/geo/1.0/direct?q=${query}&limit=5&appid=${APIkey}`
-      )
-        .then((resp) => resp.json())
-        .then((data: GeolocationItem[]) => {
-          geolocationList.value = data;
-        });
+      );
+      if (!resp.ok) throw new Error("Failed to fetch geolocation");
+      const data: GeolocationItem[] = await resp.json();
+      geolocationList.value = data;
+    } catch (e: any) {
+      error.value = e.message;
+      geolocationList.value = [];
+    } finally {
+      isLoading.value = false;
     }
   };
 
-  const getWeather = ([lat, lon]: [number, number]) => {
-    fetch(
-      `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${APIkey}&units=metric`
-    )
-      .then((resp) => resp.json())
-      .then((data: WeatherResponse) => {
-        weatherList.value = data.list;
-        console.log(data);
-      });
+  const getWeather = async (lat: number, lon: number, cityName: string) => {
+    isLoading.value = true;
+    error.value = null;
+    currentCity.value = cityName;
+    try {
+      const resp = await fetch(
+        `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${APIkey}&units=metric&lang=ua`
+      );
+      if (!resp.ok) throw new Error("Failed to fetch weather");
+      const data: WeatherResponse = await resp.json();
+      weatherList.value = data.list;
+    } catch (e: any) {
+      error.value = e.message;
+      weatherList.value = [];
+    } finally {
+      isLoading.value = false;
+    }
   };
 
-  return { weatherList, geolocationList, getWeather, getGeolocation };
+  return {
+    weatherList,
+    geolocationList,
+    currentCity,
+    isLoading,
+    error,
+    getWeather,
+    getGeolocation,
+  };
 });
