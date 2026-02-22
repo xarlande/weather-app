@@ -11,6 +11,7 @@
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx --fix --ignore-path .gitignore"
   },
   "dependencies": {
+    "ofetch": "^1.5.1",
     "pinia": "^2.0.32",
     "vue": "^3.2.47"
   },
