@@ -41,7 +41,7 @@
 </template>
 
 <script setup lang="ts">
-import type { WeatherForecastItem } from "@/stores/weatherStore";
+import { WeatherForecastItem } from "@/types/weather";
 
 defineProps<{
   weather: WeatherForecastItem;

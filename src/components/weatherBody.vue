@@ -34,8 +34,8 @@
 
 <script setup lang="ts">
 import WeatherItem from "@/components/weatherBody/weatherItem.vue";
-import type { WeatherForecastItem } from "@/stores/weatherStore";
 import { useWeatherStore } from "@/stores/weatherStore";
+import type { WeatherForecastItem } from "@/types/weather";
 import { storeToRefs } from "pinia";
 import { computed } from "vue";
 

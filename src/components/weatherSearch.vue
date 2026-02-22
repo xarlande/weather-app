@@ -63,25 +63,25 @@
 </template>
 
 <script setup lang="ts">
-import { useWeatherStore, type GeolocationItem } from "@/stores/weatherStore";
+import { useWeatherStore } from "@/stores/weatherStore";
+import { GeolocationItem } from "@/types/weather";
 import { storeToRefs } from "pinia";
 import { ref, watch } from "vue";
 
 const store = useWeatherStore();
-const { getGeolocation, getWeather } = store;
 const { geolocationList } = storeToRefs(store);
 
 const searchQuery = ref("");
 
 const handleSearch = () => {
   if (searchQuery.value.length > 1) {
-    getGeolocation(searchQuery.value);
+    store.getGeolocation(searchQuery.value);
   }
 };
 
 const selectCity = (item: GeolocationItem) => {
   const cityName = item.local_names?.uk || item.name;
-  getWeather(item.lat, item.lon, cityName);
+  store.getWeather(item.lat, item.lon, cityName);
   searchQuery.value = "";
   store.geolocationList = []; // Clear dropdown manually
 };

@@ -1,9 +1,7 @@
 import { fetchGeolocation, fetchWeatherForecast } from "@/api/weatherApi";
 import type { GeolocationItem, WeatherForecastItem } from "@/types/weather";
-import { defineStore } from "pinia";
+import { acceptHMRUpdate, defineStore } from "pinia";
 import { ref } from "vue";
-
-export type { GeolocationItem, WeatherForecastItem } from "@/types/weather";
 
 export const useWeatherStore = defineStore("weather", () => {
   const geolocationList = ref<GeolocationItem[]>([]);
@@ -55,3 +53,7 @@ export const useWeatherStore = defineStore("weather", () => {
     getGeolocation,
   };
 });
+
+if (import.meta.hot) {
+  import.meta.hot.accept(acceptHMRUpdate(useWeatherStore, import.meta.hot));
+}
