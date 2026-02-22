@@ -24,6 +24,19 @@
       <span>H: {{ Math.round(weather.main.temp_max) }}°</span>
       <span>L: {{ Math.round(weather.main.temp_min) }}°</span>
     </div>
+
+    <div
+      v-if="weather.pop > 0"
+      class="flex gap-1 items-center mt-2 text-xs text-blue-300 font-medium"
+    >
+      <span>☔ {{ Math.round(weather.pop * 100) }}%</span>
+      <span v-if="weather.rain" class="opacity-80"
+        >({{ weather.rain["3h"] }}mm)</span
+      >
+      <span v-if="weather.snow" class="opacity-80"
+        >({{ weather.snow["3h"] }}mm)</span
+      >
+    </div>
   </div>
 </template>
 

@@ -34,6 +34,7 @@
 
 <script setup lang="ts">
 import WeatherItem from "@/components/weatherBody/weatherItem.vue";
+import type { WeatherForecastItem } from "@/stores/weatherStore";
 import { useWeatherStore } from "@/stores/weatherStore";
 import { storeToRefs } from "pinia";
 import { computed } from "vue";
@@ -44,9 +45,52 @@ const { weatherList } = storeToRefs(store);
 const currentWeather = computed(() => weatherList.value[0]);
 
 const dailyForecast = computed(() => {
-  // Filter to get roughly one item per day (every 8th item = 24h)
-  // starting from the next day (index 8)
-  return weatherList.value.filter((_, index) => index % 8 === 0).slice(1); // skip today (current)
+  if (weatherList.value.length === 0) return [];
+
+  const groups: Record<string, WeatherForecastItem[]> = {};
+  weatherList.value.forEach((item) => {
+    const date = item.dt_txt.split(" ")[0];
+    if (!groups[date]) groups[date] = [];
+    groups[date].push(item);
+  });
+
+  const today = new Date().toISOString().split("T")[0];
+  const result: WeatherForecastItem[] = [];
+  const sortedDates = Object.keys(groups).sort();
+
+  for (const date of sortedDates) {
+    if (date === today) continue;
+
+    const dayItems = groups[date];
+    let minTemp = dayItems[0].main.temp_min;
+    let maxTemp = dayItems[0].main.temp_max;
+    let maxPop = dayItems[0].pop;
+
+    dayItems.forEach((item) => {
+      if (item.main.temp_min < minTemp) minTemp = item.main.temp_min;
+      if (item.main.temp_max > maxTemp) maxTemp = item.main.temp_max;
+      if (item.pop > maxPop) maxPop = item.pop;
+    });
+
+    const noonItem =
+      dayItems.find((item) => item.dt_txt.includes("12:00:00")) ||
+      dayItems[Math.floor(dayItems.length / 2)];
+
+    const representative: WeatherForecastItem = {
+      ...noonItem,
+      main: {
+        ...noonItem.main,
+        temp_min: minTemp,
+        temp_max: maxTemp,
+      },
+      pop: maxPop,
+    };
+
+    result.push(representative);
+    if (result.length >= 5) break;
+  }
+
+  return result;
 });
 </script>
 
