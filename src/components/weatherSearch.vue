@@ -12,26 +12,55 @@
         class="w-full px-4 py-3 bg-white/20 border border-white/30 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-white/50 backdrop-blur-sm transition-all"
         :class="{ 'rounded-b-none border-b-0': geolocationList.length > 0 }"
       />
-      <button
-        @click="handleSearch"
-        class="absolute right-2 top-1/2 -translate-y-1/2 p-2 hover:bg-white/10 rounded-full transition-colors"
-        :disabled="store.isLoading"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="h-5 w-5"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
+      <div class="absolute right-2 top-1/2 -translate-y-1/2 flex gap-1">
+        <button
+          @click="handleGeolocation"
+          class="p-2 hover:bg-white/10 rounded-full transition-colors"
+          :disabled="store.isLoading"
+          title="Моє місцезнаходження"
         >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-          />
-        </svg>
-      </button>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+            />
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+            />
+          </svg>
+        </button>
+        <button
+          @click="handleSearch"
+          class="p-2 hover:bg-white/10 rounded-full transition-colors"
+          :disabled="store.isLoading"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+            />
+          </svg>
+        </button>
+      </div>
 
       <!-- Dropdown Results -->
       <div
@@ -76,6 +105,23 @@ const searchQuery = ref("");
 const handleSearch = () => {
   if (searchQuery.value.length > 1) {
     store.getGeolocation(searchQuery.value);
+  }
+};
+
+const handleGeolocation = () => {
+  if (navigator.geolocation) {
+    store.isLoading = true;
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        store.getWeather(position.coords.latitude, position.coords.longitude);
+      },
+      (error) => {
+        store.error = "Не вдалося отримати місцезнаходження: " + error.message;
+        store.isLoading = false;
+      }
+    );
+  } else {
+    store.error = "Геолокація не підтримується вашим браузером";
   }
 };
 
