@@ -41,14 +41,14 @@
 </template>
 
 <script setup lang="ts">
-import { WeatherForecastItem } from "@/types/weather";
+import type { WeatherForecastItem } from "@/types/weather";
+import dayjs from "dayjs";
 
 defineProps<{
   weather: WeatherForecastItem;
 }>();
 
 const formatDate = (dt: number) => {
-  const date = new Date(dt * 1000);
-  return date.toLocaleDateString("uk-UA", { weekday: "short", day: "numeric" });
+  return dayjs(dt * 1000).format("ddd, D");
 };
 </script>

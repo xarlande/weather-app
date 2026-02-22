@@ -9,15 +9,8 @@
         class="p-6 border-b border-white/10 flex items-center justify-between"
       >
         <h1 class="text-2xl font-bold tracking-tight">Погода</h1>
-        <div class="text-sm opacity-75">
-          {{
-            new Date().toLocaleDateString("uk-UA", {
-              weekday: "long",
-              year: "numeric",
-              month: "long",
-              day: "numeric",
-            })
-          }}
+        <div class="text-sm opacity-75 capitalize">
+          {{ currentDate }}
         </div>
       </header>
 
@@ -47,6 +40,8 @@
 import WeatherBody from "@/components/weatherBody.vue";
 import WeatherSearch from "@/components/weatherSearch.vue";
 import { useWeatherStore } from "@/stores/weatherStore";
+import dayjs from "dayjs";
 
 const store = useWeatherStore();
+const currentDate = dayjs().format("dddd, D MMMM YYYY");
 </script>

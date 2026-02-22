@@ -36,6 +36,7 @@
 import WeatherItem from "@/components/weatherBody/weatherItem.vue";
 import { useWeatherStore } from "@/stores/weatherStore";
 import type { WeatherForecastItem } from "@/types/weather";
+import dayjs from "dayjs";
 import { storeToRefs } from "pinia";
 import { computed } from "vue";
 
@@ -49,12 +50,12 @@ const dailyForecast = computed(() => {
 
   const groups: Record<string, WeatherForecastItem[]> = {};
   weatherList.value.forEach((item) => {
-    const date = item.dt_txt.split(" ")[0];
+    const date = dayjs(item.dt * 1000).format("YYYY-MM-DD");
     if (!groups[date]) groups[date] = [];
     groups[date].push(item);
   });
 
-  const today = new Date().toISOString().split("T")[0];
+  const today = dayjs().format("YYYY-MM-DD");
   const result: WeatherForecastItem[] = [];
   const sortedDates = Object.keys(groups).sort();
 
