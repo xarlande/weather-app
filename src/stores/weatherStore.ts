@@ -28,18 +28,14 @@ export const useWeatherStore = defineStore("weather", () => {
     }
   };
 
-  const getWeather = async (lat: number, lon: number, cityName?: string) => {
+  const getWeather = async (lat: number, lon: number) => {
     isLoading.value = true;
     error.value = null;
-    if (cityName) {
-      currentCity.value = cityName;
-    }
+
     try {
       const data = await fetchWeatherForecast(lat, lon);
       weatherList.value = data.list;
-      if (!cityName) {
-        currentCity.value = data.city.name;
-      }
+      currentCity.value = data.city.name;
     } catch (e: any) {
       error.value = e.message;
       weatherList.value = [];

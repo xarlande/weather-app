@@ -126,8 +126,7 @@ const handleGeolocation = () => {
 };
 
 const selectCity = (item: GeolocationItem) => {
-  const cityName = item.local_names?.uk || item.name;
-  store.getWeather(item.lat, item.lon, cityName);
+  store.getWeather(item.lat, item.lon);
   searchQuery.value = "";
   store.geolocationList = []; // Clear dropdown manually
 };
