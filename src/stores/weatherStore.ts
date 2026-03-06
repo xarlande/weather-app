@@ -1,4 +1,4 @@
-import { fetchGeolocation, fetchWeatherForecast } from "@/api/weatherApi";
+import { fetchGeolocation, fetchWeatherForecast } from "#api";
 import type { GeolocationItem, WeatherForecastItem } from "@/types/weather";
 import { acceptHMRUpdate, defineStore } from "pinia";
 import { ref } from "vue";
