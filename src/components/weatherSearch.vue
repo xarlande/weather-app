@@ -5,6 +5,7 @@
     >
     <div class="relative">
       <input
+        id="search-input"
         type="text"
         v-model.trim="searchQuery"
         @keyup.enter="handleSearch"
